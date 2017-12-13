@@ -131,7 +131,7 @@ $volume = $_POST['volume'];
 
 ?>
 
-<h3> Hasil Perhitungan dengan Volume <?php echo $_POST['volume']; ?> </h3>
+<h3> Hasil Perhitungan dengan Jenis : <?php echo $_POST['jenis'] ?> Volume <?php echo $_POST['volume']; ?> </h3>
 <canvas id="myChart"> </canvas>
 
 <script>
