@@ -106,7 +106,7 @@ $autoclave_jenis = (float) "100,00";
 $volume = $_POST['volume'];
 
   if($volume >= 0 AND $volume <= 100){
-    $x = 100;
+    $x = $volume;
     $y = (($x - 0) * (0 - 1)) / ((400 - 0) + 1);
     $yaksen = $y * 100;
     $d = ($y * 400) / $y;
