@@ -17,7 +17,7 @@
                       <div class="input-field col s6">
                         <select name="jenis">
                           <option value="" disabled selected>Pilih Jenis</option>
-                          <option value="jarumsuntuk">Jarum Suntik</option>
+                          <option value="jarumsuntik">Jarum Suntik</option>
                           <option value="botolkaca">Botol Kaca</option>
                           <option value="infuskateter">Infus Kateter</option>
                         </select>
@@ -52,25 +52,25 @@
 error_reporting(0);
 if(@$_POST['proses'] == '1'){
 $insinetor_emisi = (float) "30,0";
-$landfil_emisi = (float) "45,0";
+$landfill_emisi = (float) "45,0";
 $autoclave_emisi = (float) "83,0";
 
 
 
 $insinetor_lokasi = (float) "27,0";
-$landfil_lokasi = (float) "35,0";
+$landfill_lokasi = (float) "35,0";
 $autoclave_lokasi = (float) "90,0";
 
 
 
 $insinetor_efektivitas = (float) "100,0";
-$landfil_efektivitas = (float) "33,30";
+$landfill_efektivitas = (float) "33,30";
 $autoclave_efektivitas = (float) "83,30";
 
 
 
 $insinetor_biaya = (float) "67,70";
-$landfil_biaya = (float) "100,00";
+$landfill_biaya = (float) "100,00";
 $autoclave_biaya = (float) "90,20";
 
 
@@ -80,7 +80,7 @@ if($jenis == 'jarumsuntik'){
 
 
 $insinetor_jenis = (float) "100,00";
-$landfil_jenis = (float) "50,00";
+$landfill_jenis = (float) "50,00";
 $autoclave_jenis = (float) "69,4";
 
 
@@ -88,7 +88,7 @@ $autoclave_jenis = (float) "69,4";
 
 
 $insinetor_jenis = (float) "50,00";
-$landfil_jenis = (float) "58,30";
+$landfill_jenis = (float) "58,30";
 $autoclave_jenis = (float) "100,0";
 
 
@@ -96,7 +96,7 @@ $autoclave_jenis = (float) "100,0";
 
 
 $insinetor_jenis = (float) "83,30";
-$landfil_jenis = (float) "50,00";
+$landfill_jenis = (float) "50,00";
 $autoclave_jenis = (float) "100,00";
 
 
@@ -104,27 +104,89 @@ $autoclave_jenis = (float) "100,00";
 
 
 $volume = $_POST['volume'];
-
+//echo $volume;
   if($volume >= 0 AND $volume <= 100){
     $x = $volume;
     $y = (($x - 0) * (0 - 1)) / ((400 - 0) + 1);
     $yaksen = $y * 100;
     $d = ($y * 400) / $y;
     $rv_min = (100 / $d) *100;
+
+
+  }else if($volume >=  101 AND $volume <= 399){
+
+    $xa = $volume;
+    $x1a = 0;
+    $y1a = 1;
+    $y2a = 0;
+    $x2a = 400;
+
+    //315 * 9-1
+
+    $ya = (($xa - $x1a) * ($y2a - $y1a) / ($x2a - $x1a)) + $y1a;
+
+   // echo "Hasil Y Atas ".$ya."<br />";
+    $x_bawah = $volume;
+    $x1  = 100; 
+    $y1  = 0;
+    $x2 = 500;
+    $y2 = 1;
+      $y_bawah = (($x_bawah - $x1) * ($y2 - $y1) / ($x2 - $x1)) + $y1;
+
+    //  echo "Hasl Y Bawah ".$y_bawah."<br />";
+
+      $d = ($ya * $x1a) + ($y_bawah * $x2) / ($ya + $y_bawah);
+  
+      $rv_min = (100 / $d) * 100;
+  //    echo "Hasil RV ".$rv_min;
+//      exit;
+
+  }else if($volume >= 400 AND $volume <= 499){
+
+    
+    $x = $volume;
+    $x1 = 100;
+    $x2 = 500;
+    $y1 = 0;
+    $y2 = 1;
+
+    $y = (($x - $x1) * ($y2 - $y1)) / (($x2 - $x1) + 1);
+    $yaksen = $y * 100;
+    $d = ($y * 400) / $y;
+    $rv_min = (100 / $d) *100;
+
+  }else if($volume >= 500 AND $volume <= 600){
+
+
+  }else if($volume >= 601 AND $volume <= 899){
+
+
+
+  }else if($volume >= 900 AND $volume <= 1000){
+
+
+
   }
 
+
+  $ins_rv = abs($insinetor_efektivitas - $rv_min);
+
+  $landfill_rv = abs( (float) $landfill_efektivitas - $rv_min);
+
+  $autoclave_rv = abs($autoclave_efektivitas - $rv_min);
 
   $total_isinetor = 0;
   $total_landfill = 0;
   $total_autoclave = 0;
 
-  $total_isinetor = $insinetor_jenis + $insinetor_biaya + $insinetor_efektivitas + $insinetor_lokasi + $insinetor_emisi + $rv_min;
+  $total_isinetor = $insinetor_jenis + $insinetor_biaya + $insinetor_efektivitas + $insinetor_lokasi + $insinetor_emisi + $ins_rv;
+
+  $total_landfill = $landfill_jenis + $landfill_biaya + $landfill_efektivitas + $landfill_lokasi + $landfill_emisi + $landfill_rv;
+  
+  $total_autoclave = $autoclave_jenis + $autoclave_biaya + $autoclave_efektivitas + $autoclave_lokasi + $autoclave_emisi + $autoclave_rv;
 
 
-  $total_landfill = $landfill_jenis + $landfill_biaya + $landfill_efektivitas + $landfill_lokasi + $landfill_emisi + $rv_min;
-  $total_autoclave = $autoclave_jenis + $autoclave_biaya + $autoclave_efektivitas + $autoclave_lokasi + $autoclave_emisi + $rv_min;
-
-  $total_isinetor = $total_isinetor / 6;
+  $total_isinetor = $total_isinetor / 6;  
   $total_landfill = $total_landfill / 6;
   $total_autoclave = $total_autoclave / 6;
 
@@ -141,7 +203,6 @@ $volume = $_POST['volume'];
                 data: {
                     labels: ["Insinerator", "Landfill", "AutoClave"],
                     datasets: [{
-                            label: '# of Votes',
                             data: [<?php echo $total_isinetor ?>, <?php echo $total_landfill ?>, <?php echo $total_autoclave ?>],
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',
